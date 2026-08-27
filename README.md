@@ -1,5 +1,7 @@
 # skill-lint
 
+[![ci](https://github.com/Asanovichoff/skill-lint/actions/workflows/ci.yml/badge.svg)](https://github.com/Asanovichoff/skill-lint/actions/workflows/ci.yml)
+
 A linter for Agent Skills. Point it at a `SKILL.md` bundle or a repository's
 `.claude/skills/` directory and it tells you what will fail on upload, what will
 never trigger, and what Claude will read incompletely.
@@ -31,6 +33,7 @@ allowed-tools, compatibility, description, license, metadata, name
 As a project skill:
 
 ```bash
+git clone https://github.com/Asanovichoff/skill-lint.git
 mkdir -p .claude/skills
 cp -r skill-lint .claude/skills/
 ```
