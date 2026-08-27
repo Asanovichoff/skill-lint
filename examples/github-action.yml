@@ -1,0 +1,45 @@
+# .github/workflows/skill-lint.yml
+#
+# Lints every SKILL.md in the repository on push and pull request.
+# Skills committed to .claude/skills/ load automatically in cloud sessions,
+# so a broken one is a shipped defect - catch it here.
+
+name: skill-lint
+
+on:
+  push:
+    paths:
+      - "**/SKILL.md"
+      - "**/.claude/skills/**"
+  pull_request:
+    paths:
+      - "**/SKILL.md"
+      - "**/.claude/skills/**"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Point this at wherever you vendored the skill.
+      - name: Lint skills
+        run: |
+          python3 .claude/skills/skill-lint/scripts/lint_skills.py \
+            .claude/skills \
+            --target both \
+            --strict
+
+      # Optional: publish the findings as a job summary.
+      - name: Summary
+        if: always()
+        run: |
+          python3 .claude/skills/skill-lint/scripts/lint_skills.py \
+            .claude/skills --json > findings.json || true
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          cat findings.json >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
